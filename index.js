@@ -340,8 +340,17 @@ async function handleIncomingMessage() {
                             const newImageTag = `<img src="${imageUrl}" title="${prompt}" alt="${prompt}">`;
                             message.mes = message.mes.replace(originalTag, newImageTag);
 
+                            // Find the message ID from the chat array
+                            const messageId = context.chat.indexOf(message);
+
+                            // Emit the MESSAGE_UPDATED event with the message ID
+                            await eventSource.emit(event_types.MESSAGE_UPDATED, messageId);
+
                             // Update the message display using updateMessageBlock
                             updateMessageBlock(context.chat.length - 1, message);
+
+                            // Emit the MESSAGE_UPDATED event with the message ID
+                            await eventSource.emit(event_types.MESSAGE_UPDATED, messageId);
 
                             // Save the chat
                             await context.saveChat();
